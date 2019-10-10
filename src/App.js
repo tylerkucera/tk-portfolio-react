@@ -6,20 +6,25 @@ function App() {
   return (
     <div css={styles.appContainer}>
       <header css={styles.header}>
-        <img src={logo} alt="logo" css={styles.logo} />
+        <img
+          alt={'logo'}
+          css={styles.logo}
+          src={logo}
+        />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <a
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
           css={styles.link}
+          href={'https://reactjs.org'}
+          rel={'noopener noreferrer'}
+          target={'_blank'}
         >
           Learn React
         </a>
       </header>
     </div>
+
   );
 }
 
@@ -41,7 +46,7 @@ const styles = StyleSheet.create({
     height: '40vmin',
   },
   link: {
-    color: '#09d3ac'
+    color: '#09d3ac',
   },
 });
 
