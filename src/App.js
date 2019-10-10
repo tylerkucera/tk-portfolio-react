@@ -1,20 +1,20 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import { StyleSheet } from './utils/Styles';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div css={styles.appContainer}>
+      <header css={styles.header}>
+        <img src={logo} alt="logo" css={styles.logo} />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <a
-          className="App-link"
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
+          css={styles.link}
         >
           Learn React
         </a>
@@ -22,5 +22,27 @@ function App() {
     </div>
   );
 }
+
+const styles = StyleSheet.create({
+  appContainer: {
+    textAlign: 'center',
+  },
+  header: {
+    backgroundColor: '#282c34',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 'calc(10px + 2vmin)',
+    color: 'white',
+  },
+  logo: {
+    height: '40vmin',
+  },
+  link: {
+    color: '#09d3ac'
+  },
+});
 
 export default App;
