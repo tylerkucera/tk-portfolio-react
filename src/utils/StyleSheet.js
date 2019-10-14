@@ -1,3 +1,5 @@
+import Colors from '@app/utils/Colors';
+import Themes from '@app/utils/Themes';
 import { css as emotionCss } from '@emotion/core';
 
 const StyleSheet = {
@@ -17,4 +19,4 @@ const StyleSheet = {
   },
 };
 
-export { StyleSheet };
+export { StyleSheet, Colors, Themes };
