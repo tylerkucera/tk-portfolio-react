@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
+import ThemeContext from '@app/contexts/ThemeContext';
 import { Colors, StyleSheet } from '@app/utils/StyleSheet';
 
 export const colors = [
@@ -10,18 +11,20 @@ export const colors = [
 ];
 
 export default function ColorSwitcher() {
-  const [currentColor, setCurrentColor] = useState(Colors.jet());
+  const { backgroundColor, updateBackgroundColor } = useContext(ThemeContext);
 
   return (
     <div css={styles.container}>
-      {colors.map((color) => (
-        <ColorCircle
-          color={color}
-          isSelected={color === currentColor}
-          key={color}
-          onClick={() => setCurrentColor(color)}
-        />
-      ))}
+      {colors.map((color) => {
+        return (
+          <ColorCircle
+            color={color}
+            isSelected={color === backgroundColor}
+            key={color}
+            onClick={() => updateBackgroundColor(color)}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -31,13 +34,20 @@ function ColorCircle({
   isSelected,
   onClick,
 }) {
-  const colorStyle = StyleSheet.create({
-    circle: {
+  const { backgroundColor } = useContext(ThemeContext);
+
+  const dynamicStyles = StyleSheet.create({
+    colorCircle: {
       background: color,
+      border: `solid 4px ${backgroundColor}`,
     },
   });
 
-  const circleStyles = [styles.colorCircle, colorStyle.circle, isSelected ? styles.selected : null];
+  const circleStyles = [
+    styles.colorCircle,
+    dynamicStyles.colorCircle,
+    isSelected ? styles.selected : null,
+  ];
 
   return (
     <div
@@ -58,14 +68,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     paddingBottom: 30,
   },
+  selected: {
+    border: `solid 4px ${Colors.antiFlashWhite()}`,
+  },
   colorCircle: {
     height: 30,
     width: 30,
     margin: '0 5px',
     borderRadius: 19,
-    border: `solid 4px ${Colors.jet()}`,
-  },
-  selected: {
-    border: `solid 4px ${Colors.antiFlashWhite()}`,
+    transition: 'border-color 200ms',
   },
 });

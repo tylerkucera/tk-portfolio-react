@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useRef } from 'react';
+import ThemeContext from '@app/contexts/ThemeContext';
 import { Colors, StyleSheet, Themes } from '@app/utils/StyleSheet';
 
 export default function Name({ onClick }) {
@@ -23,9 +24,21 @@ export default function Name({ onClick }) {
     };
   }, [handleScroll]);
 
+  const { backgroundColor } = useContext(ThemeContext);
+
+  const dynamicStyles = StyleSheet.create({
+    name: {
+      backgroundColor,
+      ':hover': {
+        color: backgroundColor,
+        borderColor: backgroundColor,
+      },
+    },
+  });
+
   return (
     <button
-      css={[styles.header]}
+      css={[styles.header, dynamicStyles.name]}
       onClick={onClick}
       ref={buttonRef}
     >
@@ -39,13 +52,10 @@ const styles = StyleSheet.create({
     ...Themes.nameButton(),
     cursor: 'pointer',
     border: '8px solid',
-    transition: 'all 200ms',
-    background: Colors.jet(),
+    transition: 'background-color 200ms',
     ':hover': {
       backgroundColor: Colors.antiFlashWhite(),
-      color: Colors.jet(),
-      borderColor: Colors.jet(),
-      transition: 'all 200ms',
+      transition: 'background-color 200ms',
     },
   },
 });

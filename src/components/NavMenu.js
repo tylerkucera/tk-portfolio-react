@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import Responsive from '@app/utils/Responsive';
+import ThemeContext from '@app/contexts/ThemeContext';
 import { Colors, StyleSheet, Themes } from '@app/utils/StyleSheet';
 
 export const ItemStrings = {
@@ -53,8 +54,16 @@ export default function NavMenu({ onClick, sectionRefs }) {
     return false;
   };
 
+  const { backgroundColor } = useContext(ThemeContext);
+
+  const dynamicStyles = StyleSheet.create({
+    background: {
+      backgroundColor,
+    },
+  });
+
   return (
-    <ul css={[styles.navContainer, menuStyles.menu]}>
+    <ul css={[styles.navContainer, dynamicStyles.background, menuStyles.menu]}>
       <li css={getItemStyles(ItemStrings.About)}>
         <button onClick={() => onClick(ItemStrings.About)}>
           {ItemStrings.About}
@@ -86,8 +95,8 @@ const styles = StyleSheet.create({
     border: `3px solid ${Colors.antiFlashWhite()}`,
     width: 'fit-content',
     left: -210,
-    background: Colors.jet(),
     padding: 5,
+    transition: 'background-color 200ms',
     ...Responsive.sm({
       padding: 10,
     }),

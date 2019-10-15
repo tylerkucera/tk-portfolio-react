@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useContext } from 'react';
 import Responsive from '../utils/Responsive';
+import ThemeContext from '@app/contexts/ThemeContext';
 import { Colors, StyleSheet } from '@app/utils/StyleSheet';
 
 const techTitles = [
@@ -44,7 +45,18 @@ export default function Technologies() {
 }
 
 function TechSection({ children }) {
-  return <div css={styles.techSection}>{children}</div>;
+  const { backgroundColor } = useContext(ThemeContext);
+
+  const dynamicStyles = StyleSheet.create({
+    techSection: {
+      ':hover': {
+        color: backgroundColor,
+        borderColor: backgroundColor,
+      },
+    },
+  });
+
+  return <div css={[styles.techSection, dynamicStyles.techSection]}>{children}</div>;
 }
 
 const styles = StyleSheet.create({
@@ -72,8 +84,6 @@ const styles = StyleSheet.create({
     cursor: 'default',
     ':hover': {
       backgroundColor: Colors.antiFlashWhite(),
-      color: Colors.jet(),
-      borderColor: Colors.jet(),
       transition: 'background 200ms',
     },
   },
