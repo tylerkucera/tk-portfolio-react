@@ -1,14 +1,16 @@
-import * as firebase from 'firebase/app';
 import ColorSwitcher from '@app/components/ColorSwitcher';
 import Contact from '@app/components/Contact';
 import ContentSection from '@app/components/ContentSection';
 import Copyright from '@app/components/Copyright';
+import FirebaseConfigService from '@app/utils/FirebaseConfigService';
 import Header from '@app/components/Header';
 import React, { useRef, useState } from 'react';
 import Technologies from '@app/components/Technologies';
 import ThemeContext from '@app/contexts/ThemeContext';
+import firebaseAnalytics from '@app/utils/FirebaseAnalytics';
 import { Colors, StyleSheet } from '@app/utils/StyleSheet';
-import 'firebase/analytics';
+
+FirebaseConfigService.initializeApp();
 
 export const ItemStrings = {
   About: 'About',
@@ -17,21 +19,8 @@ export const ItemStrings = {
   Contact: 'Contact',
 };
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyCo06y1WM2nDfM4EeJ8ltzXBDEOpY76k2Q',
-  authDomain: 'tkportfolio-99739.firebaseapp.com',
-  databaseURL: 'https://tkportfolio-99739.firebaseio.com',
-  projectId: 'tkportfolio-99739',
-  storageBucket: 'tkportfolio-99739.appspot.com',
-  messagingSenderId: '723010882063',
-  appId: '1:723010882063:web:5fd9b246def1f5ed5fb17a',
-  measurementId: 'G-60EYQH36XE',
-};
-
-firebase.initializeApp(firebaseConfig);
-
 export default function App() {
-  firebase.analytics().logEvent('app_viewed');
+  firebaseAnalytics().logEvent('app_viewed');
 
   const sectionRefs = {
     Top: {
@@ -64,17 +53,17 @@ export default function App() {
   };
 
   const handleNavClick = (sectionName) => {
-    firebase.analytics().logEvent(`clicked_nav_${sectionRefs[sectionName].name}`);
+    firebaseAnalytics().logEvent(`clicked_nav_${sectionRefs[sectionName].name}`);
     scrollTo(sectionRefs[sectionName].ref);
   };
 
   const handleChevronClick = (section) => {
-    firebase.analytics().logEvent(`clicked_chevron_to_${section.name}`);
+    firebaseAnalytics().logEvent(`clicked_chevron_to_${section.name}`);
     scrollTo(section.ref);
   };
 
   const logClick = (target) => {
-    firebase.analytics().logEvent(`clicked_${target}`);
+    firebaseAnalytics().logEvent(`clicked_${target}`);
   };
 
   const [backgroundColor, updateBackgroundColor] = useState(Colors.jet());
