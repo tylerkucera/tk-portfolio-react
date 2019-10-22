@@ -1,27 +1,47 @@
+import * as firebase from 'firebase/app';
 import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import ThemeContext from '@app/contexts/ThemeContext';
+import snakeCase from 'lodash/snakeCase';
 import { Colors, StyleSheet } from '@app/utils/StyleSheet';
+import 'firebase/analytics';
 
 export const colors = [
-  Colors.jet(),
-  Colors.hookersGreen(),
-  Colors.japaneseIndigo(),
-  Colors.blueSapphite(),
+  {
+    name: 'jet',
+    hexValue: Colors.jet(),
+  },
+  {
+    name: 'hookersGreen',
+    hexValue: Colors.hookersGreen(),
+  },
+  {
+    name: 'japaneseIndigo',
+    hexValue: Colors.japaneseIndigo(),
+  },
+  {
+    name: 'blueSapphite',
+    hexValue: Colors.blueSapphite(),
+  },
 ];
 
 export default function ColorSwitcher() {
   const { backgroundColor, updateBackgroundColor } = useContext(ThemeContext);
+
+  const onClickColor = (color) => {
+    firebase.analytics().logEvent(`clicked_color_${snakeCase(color.name)}`);
+    updateBackgroundColor(color.hexValue);
+  };
 
   return (
     <div css={styles.container}>
       {colors.map((color) => {
         return (
           <ColorCircle
-            color={color}
-            isSelected={color === backgroundColor}
-            key={color}
-            onClick={() => updateBackgroundColor(color)}
+            color={color.hexValue}
+            isSelected={color.hexValue === backgroundColor}
+            key={color.name}
+            onClick={() => onClickColor(color)}
           />
         );
       })}

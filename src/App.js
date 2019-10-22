@@ -1,3 +1,4 @@
+import * as firebase from 'firebase/app';
 import ColorSwitcher from '@app/components/ColorSwitcher';
 import Contact from '@app/components/Contact';
 import ContentSection from '@app/components/ContentSection';
@@ -7,6 +8,7 @@ import React, { useRef, useState } from 'react';
 import Technologies from '@app/components/Technologies';
 import ThemeContext from '@app/contexts/ThemeContext';
 import { Colors, StyleSheet } from '@app/utils/StyleSheet';
+import 'firebase/analytics';
 
 export const ItemStrings = {
   About: 'About',
@@ -15,13 +17,43 @@ export const ItemStrings = {
   Contact: 'Contact',
 };
 
+const firebaseConfig = {
+  apiKey: 'AIzaSyCo06y1WM2nDfM4EeJ8ltzXBDEOpY76k2Q',
+  authDomain: 'tkportfolio-99739.firebaseapp.com',
+  databaseURL: 'https://tkportfolio-99739.firebaseio.com',
+  projectId: 'tkportfolio-99739',
+  storageBucket: 'tkportfolio-99739.appspot.com',
+  messagingSenderId: '723010882063',
+  appId: '1:723010882063:web:5fd9b246def1f5ed5fb17a',
+  measurementId: 'G-60EYQH36XE',
+};
+
+firebase.initializeApp(firebaseConfig);
+
 export default function App() {
+  firebase.analytics().logEvent('app_viewed');
+
   const sectionRefs = {
-    Top: useRef(),
-    About: useRef(),
-    Experience: useRef(),
-    Technologies: useRef(),
-    Contact: useRef(),
+    Top: {
+      ref: useRef(),
+      name: 'top',
+    },
+    About: {
+      ref: useRef(),
+      name: 'about',
+    },
+    Experience: {
+      ref: useRef(),
+      name: 'experience',
+    },
+    Technologies: {
+      ref: useRef(),
+      name: 'technologies',
+    },
+    Contact: {
+      ref: useRef(),
+      name: 'contact',
+    },
   };
 
   const scrollTo = (ref) => {
@@ -31,8 +63,18 @@ export default function App() {
     });
   };
 
-  const handleNavClick = (section) => {
-    scrollTo(sectionRefs[section]);
+  const handleNavClick = (sectionName) => {
+    firebase.analytics().logEvent(`clicked_nav_${sectionRefs[sectionName].name}`);
+    scrollTo(sectionRefs[sectionName].ref);
+  };
+
+  const handleChevronClick = (section) => {
+    firebase.analytics().logEvent(`clicked_chevron_to_${section.name}`);
+    scrollTo(section.ref);
+  };
+
+  const logClick = (target) => {
+    firebase.analytics().logEvent(`clicked_${target}`);
   };
 
   const [backgroundColor, updateBackgroundColor] = useState(Colors.jet());
@@ -55,26 +97,26 @@ export default function App() {
     <ThemeContext.Provider value={themeContextValue}>
       <div css={[styles.appContainer, dynamicStyles.appContainer]}>
         <Header
-          onNameClick={() => scrollTo(sectionRefs.Top)}
-          onNavButtonClick={(section) => handleNavClick(section)}
+          onNameClick={() => handleChevronClick(sectionRefs.Top)}
+          onNavButtonClick={(sectionName) => handleNavClick(sectionName)}
           sectionRefs={sectionRefs}
         />
         <div css={[styles.container, dynamicStyles.container]}>
           <ContentSection
-            onClickChevron={() => scrollTo(sectionRefs.About)}
-            refProp={sectionRefs.Top}
+            onClickChevron={() => handleChevronClick(sectionRefs.About)}
+            refProp={sectionRefs.Top.ref}
           />
           <ContentSection
-            onClickChevron={() => scrollTo(sectionRefs.Experience)}
-            refProp={sectionRefs.About}
+            onClickChevron={() => handleChevronClick(sectionRefs.Experience)}
+            refProp={sectionRefs.About.ref}
           >
             <p>
             Hi, my name is Tyler Kucera and I’m a software engineer based out of Columbus, Ohio. Lately my focus has been in full stack web development, with an interest in both the visual design and technical implementation of web applications.
             </p>
           </ContentSection>
           <ContentSection
-            onClickChevron={() => scrollTo(sectionRefs.Technologies)}
-            refProp={sectionRefs.Experience}
+            onClickChevron={() => handleChevronClick(sectionRefs.Technologies)}
+            refProp={sectionRefs.Experience.ref}
           >
             <p>
             I have three years of professional experience with full stack web development, including work with React, React Native, Ruby on Rails, Vue/Vuex, .Net Core 2.0, C#, ColdFusion, and SQL. I also have about 8 months of professional experience developing MFC applications in C++.
@@ -83,6 +125,7 @@ export default function App() {
               {'I developed a mock marketing website for a friend’s company using HTML, CSS, JavaScript, and a little PHP. You can check out a clone of the site '}
               <a
                 href={'https://politicaldoorhangers.000webhostapp.com'}
+                onClick={() => logClick('political_doorhangers_clone')}
                 target={'_blank'}
               >
               here
@@ -90,6 +133,7 @@ export default function App() {
               {' and the source code on my '}
               <a
                 href={'https://github.com/tylerkucera/politicaldoorhangers'}
+                onClick={() => logClick('political_doorhangers_github')}
                 target={'_blank'}
               >
               GitHub
@@ -100,6 +144,7 @@ export default function App() {
               {'This portfolio site was writen in React, and you can take a look at the project on my '}
               <a
                 href={'https://github.com/tylerkucera/tk-portfolio-react'}
+                onClick={() => logClick('tk_portfolio_react_github')}
                 target={'_blank'}
               >
               GitHub
@@ -108,8 +153,8 @@ export default function App() {
             </p>
           </ContentSection>
           <ContentSection
-            onClickChevron={() => scrollTo(sectionRefs.Contact)}
-            refProp={sectionRefs.Technologies}
+            onClickChevron={() => handleChevronClick(sectionRefs.Contact)}
+            refProp={sectionRefs.Technologies.ref}
           >
             <p>
             These are some of the technlogies, languages, and frameworks that I have experience with:
@@ -117,7 +162,7 @@ export default function App() {
             <Technologies />
           </ContentSection>
           <ContentSection
-            refProp={sectionRefs.Contact}
+            refProp={sectionRefs.Contact.ref}
           >
             <Contact />
           </ContentSection>

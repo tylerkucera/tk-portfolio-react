@@ -12,6 +12,7 @@ export default function ChevronButton({ onClick, containerStyles }) {
         onClick={onClick}
       >
         <img
+          alt={'chevron-down'}
           css={styles.chevron}
           src={chevronDown}
         />

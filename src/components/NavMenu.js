@@ -44,7 +44,7 @@ export default function NavMenu({ onClick, sectionRefs }) {
   };
 
   const itemIsActive = (item) => {
-    const ref = sectionRefs[item].current;
+    const ref = sectionRefs[item].ref.current;
 
     if (ref) {
       return scrollPosition >= ref.offsetTop - 50 &&
